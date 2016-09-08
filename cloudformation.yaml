@@ -31,7 +31,7 @@
       - "{{ playbook_dir }}/json/*.json"
 
   - name: set fact for time_token
-    set_fact: time_token={{ hostvars[inventory_hostname]['ansible_date_time']['iso8601'] }}
+    set_fact: time_token="{{ ansible_date_time.iso8601 }}"
 
   - name: Create Lambda Role
     cloudformation: >
@@ -70,7 +70,7 @@
     copy: content="---\nalarm_drag{{ ':' }} {{ alarms['stack_outputs']['DragAlarm'] }}\nalarm_low_cpu{{ ':' }} {{ alarms['stack_outputs']['CpuLowAlarm'] }}\nalarm_credits{{ ':' }} {{ alarms['stack_outputs']['CreditLowAlarm'] }}\n..." dest="{{ playbook_dir }}/tmp/alarms.yaml"
 
   - name: Unzip deps
-    unarchive: src={{ playbook_dir }}/rec2/deps.zip dest={{ playbook_dir }}/lambda
+    shell: cp {{ playbook_dir }}/rec2/deps.zip {{ playbook_dir }}/lambda && cd {{ playbook_dir }}/lambda && unzip deps.zip
 
   - name: Copy script into working folder
     local_action: >
