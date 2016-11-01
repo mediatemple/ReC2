@@ -3,6 +3,8 @@ import yaml
 import boto3
 import datetime
 import pytz
+import base64
+import base64_util
 from dateutil import parser
 
 
@@ -136,6 +138,13 @@ class Rec2(object):
         if self.config['InstanceType'] not in [self.vars['credit_instance_size'], self.vars['standard_instance_size']]:
             return self.abort("Current instance type not in allowed sizes! Current: {}, Credit: {}, Standard: {}".format(self.config['InstanceType'], self.vars['credit_instance_size'], self.vars['standard_instance_size']))
 
+        try:
+            if base64_util.is_base64(arg=self.config['UserData']):
+                self.info("base64 Userdata detected.. attempting to decode")
+                self.config['UserData'] = base64.b64decode(self.config['UserData'])
+        except:
+            self.info("unable to decode userdata")
+
         if self.config['InstanceType'] == self.vars['credit_instance_size']:
             self.info("Checking if need to INCREASE")
             return self.check_increase()
@@ -206,6 +215,10 @@ class Rec2(object):
         return self.success()
 
     def create_launch_configuration(self):
+        # auto_cleanup=True is default option, if var not present will cleanup
+        # set to False to disable
+        if 'auto_cleanup' not in self.vars or self.vars['auto_cleanup']:
+            self.cleanup()
         worked = False
         to_copy = self.config.copy()
         del to_copy['CreatedTime']
@@ -227,7 +240,8 @@ class Rec2(object):
         try:
             self.autoscaling_client.create_launch_configuration(**to_copy)
             worked = True
-        except:
+        except Exception, e:
+            self.info("AMZ response {}".format(e))
             self.info("Launch Config creation failed!")
         return worked
 
@@ -247,9 +261,22 @@ class Rec2(object):
                     "PropagateAtLaunch": False
                 }])
             worked = True
-        except:
+        except Exception, e:
+            self.info("AMZ response {}".format(e))
             self.info("Unable to add action tag")
         return worked
+
+    def cleanup(self):
+        current_name = self.config['LaunchConfigurationName']
+        if '-ReC2-' in current_name:
+            for lconfig in self.launch_configurations:
+                if '-ReC2-' in lconfig['LaunchConfigurationName'] and lconfig['LaunchConfigurationName'] != self.config['LaunchConfigurationName']:
+                    self.info("Cleaning UP old ReC2 launch config! {}".format(lconfig['LaunchConfigurationName']))
+                    try:
+                        self.autoscaling_client.delete_launch_configuration(LaunchConfigurationName=lconfig['LaunchConfigurationName'])
+                    except Exception, e:
+                        self.info("AMZ response {}".format(e))
+                        self.info("Unable to delete launch config {}".format(lconfig['LaunchConfigurationName']))
 
     def apply_launch_config(self):
         desired_capacity = self.asg_details[
@@ -265,8 +292,11 @@ class Rec2(object):
             self.awsinfo("EXECUTE disabled - apply launch config {}/{}".format(
                 desired_capacity, self.pending_launch_configuration))
             return True
-        amz_res = self.autoscaling_client.update_auto_scaling_group(**asg_dict)
-        self.info("AMZ response {}".format(amz_res))
+        try:
+            self.autoscaling_client.update_auto_scaling_group(**asg_dict)
+        except Exception, e:
+            self.info("AMZ response {}".format(e))
+            self.info("Unable to apply launch config")
 
     def lambda_apply_action(self):
         if self.result['Action'] == 'MODIFY':

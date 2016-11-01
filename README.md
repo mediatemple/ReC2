@@ -13,6 +13,7 @@ Features:
 
 Requirements:
 - run **make prep** to install dependencies
+- Manually configure repeating source after install via Lambda console - there is no automated way to do this yet, unfortunately - but only one time (see below for instructions!)
 
 Tests
 - run **make test**

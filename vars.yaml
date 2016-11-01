@@ -1,35 +1,20 @@
 ---
-# prefix on cloudformation stacks
 stack_prefix: rec2
-# region in which to deploy
 region: us-west-2
-# "small" instance type to use when traffic is low
 credit_instance_size: t2.medium
-# "big" instance type to switch to when credits are low
 standard_instance_size: c4.large
 scale_down:
-  # how long to wait before switching to smaller instance type
   alarm_duration: 30
-  # amount under which average CPU must be to trigger switch
   threshold: 20
-# scale up based on average credits across ASG
 credits:
-  # how long alarm must be in alarm state before switching to larger instance type
   alarm_duration: 4
-  # amount under which average credits must be below to trigger switch
   threshold: 60
-# scale up based on lowest credits for individual instance
 drag:
-  # how long alarm must be in alarm state before switching to larger instance type
   alarm_duration: 2
-  # amount under which one machine must be below to trigger switch
   threshold: 5
-# how long to wait after creating launch configuration to act again
 cooldown: 180
-# enable ReC2 system
 enabled: True
-# enable drag sub-check
 drag_enabled: True
-# auto scaling group name to watch and modify
 asg_identifier: WebAppASG
+auto_cleanup: True
 ...
