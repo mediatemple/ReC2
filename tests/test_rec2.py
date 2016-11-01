@@ -31,7 +31,7 @@ asg_details = {
             ],
             "EnabledMetrics": [],
             "LoadBalancerNames": [
-                "MIXHOP-LB"
+                "PROD-ELB"
             ],
             "AutoScalingGroupName": "WebAppASG",
             "DefaultCooldown": 300,
@@ -89,7 +89,7 @@ asg_details_cooldown_invalid = {
             ],
             "EnabledMetrics": [],
             "LoadBalancerNames": [
-                "MIXHOP-LB"
+                "PROD-ELB"
             ],
             "AutoScalingGroupName": "WebAppASG",
             "DefaultCooldown": 300,
@@ -147,7 +147,7 @@ asg_details_cooldown_not_met = {
             ],
             "EnabledMetrics": [],
             "LoadBalancerNames": [
-                "MIXHOP-LB"
+                "PROD-ELB"
             ],
             "AutoScalingGroupName": "WebAppASG",
             "DefaultCooldown": 300,
@@ -198,7 +198,7 @@ asg_details_at_capacity = {
             ],
             "EnabledMetrics": [],
             "LoadBalancerNames": [
-                "MIXHOP-LB"
+                "PROD-ELB"
             ],
             "AutoScalingGroupName": "WebAppASG",
             "DefaultCooldown": 300,
@@ -230,8 +230,8 @@ asg_details_at_capacity = {
 # launch_configurations
 launch_configs_credit = [
         {
-            "UserData": "",
-            "IamInstanceProfile": "MixhopWorker",
+            "UserData": "#!/bin/bash",
+            "IamInstanceProfile": "LambdaWorker",
             "EbsOptimized": False,
             "LaunchConfigurationARN": "arn:aws:autoscaling:us-west-2:761425999210:launchConfiguration:d9521163-b772-4922-8c62-a814cc4aedf3:launchConfigurationName/WebAppASGLaunchConfigC",
             "InstanceMonitoring": {
@@ -265,8 +265,8 @@ launch_configs_credit = [
     ]
 launch_configs_standard = [
         {
-            "UserData": "",
-            "IamInstanceProfile": "MixhopWorker",
+            "UserData": "IyEvYmluL2Jhc2gNCg==",
+            "IamInstanceProfile": "LambdaWorker",
             "EbsOptimized": False,
             "LaunchConfigurationARN": "arn:aws:autoscaling:us-west-2:761425999210:launchConfiguration:d9521163-b772-4922-8c62-a814cc4aedf3:launchConfigurationName/WebAppASGLaunchConfigC",
             "InstanceMonitoring": {

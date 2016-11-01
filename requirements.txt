@@ -8,3 +8,4 @@ boto3
 pytest-cov
 pytz
 python-dateutil
+base64_util
