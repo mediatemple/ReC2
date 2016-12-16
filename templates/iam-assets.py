@@ -31,6 +31,7 @@ role = t.add_resource(iam.Role(
                     Effect=Allow,
                     Action=[
                         Action('autoscaling', 'CreateLaunchConfiguration'),
+                        Action('autoscaling', 'DeleteLaunchConfiguration'),
                         Action('autoscaling', 'DescribeLaunchConfigurations'),
                         Action('autoscaling', 'DescribeAutoScalingGroups'),
                         Action('autoscaling', 'UpdateAutoScalingGroup'),

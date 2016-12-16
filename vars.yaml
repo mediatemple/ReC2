@@ -4,13 +4,13 @@ region: us-west-2
 credit_instance_size: t2.medium
 standard_instance_size: c4.large
 scale_down:
-  alarm_duration: 30
+  alarm_duration: 6
   threshold: 20
 credits:
-  alarm_duration: 4
+  alarm_duration: 1
   threshold: 60
 drag:
-  alarm_duration: 2
+  alarm_duration: 1
   threshold: 5
 cooldown: 180
 enabled: True

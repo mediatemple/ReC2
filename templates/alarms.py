@@ -60,7 +60,7 @@ low_cpu_alarm = t.add_resource(
         Namespace="AWS/EC2",
         MetricName="CPUUtilization",
         Statistic="Average",
-        Period=60,
+        Period=300,
         Dimensions=[
             MetricDimension(
                 Name="AutoScalingGroupName",
@@ -83,7 +83,7 @@ low_credit_alarm = t.add_resource(
         Namespace="AWS/EC2",
         MetricName="CPUCreditBalance",
         Statistic="Average",
-        Period=60,
+        Period=300,
         Dimensions=[
             MetricDimension(
                 Name="AutoScalingGroupName",
@@ -106,7 +106,7 @@ drag_credit_alarm = t.add_resource(
         Namespace="AWS/EC2",
         MetricName="CPUCreditBalance",
         Statistic="Minimum",
-        Period=60,
+        Period=300,
         Dimensions=[
             MetricDimension(
                 Name="AutoScalingGroupName",
